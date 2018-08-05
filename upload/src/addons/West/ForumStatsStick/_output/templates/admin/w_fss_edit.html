@@ -1,0 +1,27 @@
+<xf:if is="$stickedItem.isInsert()">
+	<xf:title>{{ phrase('w_fss_add_sticked_item') }}</xf:title>
+<xf:else />
+	<xf:title>{{ phrase('w_fss_edit_sticked_item:') }} {$stickedItem.name}</xf:title>
+</xf:if>
+
+<xf:form action="{{ link('forum-stats-stick/save', $stickedItem) }}">
+	<div class="block-container">
+		<div class="block-body">
+			<xf:textboxrow name="name" value="{$stickedItem.name}"
+				label="{{ phrase('w_fss_sticked_item_name') }}" dir="ltr"
+			/>
+			<xf:textboxrow name="link" value="{$stickedItem.link}" 
+				label="{{ phrase('w_fss_sticked_item_link') }}" dir="ltr"
+			/>
+			<xf:numberboxrow name="display_order" value="{$stickedItem.display_order}"
+				label="{{ phrase('display_order') }}"
+			/>
+			<xf:submitrow sticky="true" icon="save">
+			<xf:html>
+				<xf:button type="submit" icon="save" name="exit">{{ phrase('save_and_exit') }}</xf:button>
+				<xf:button icon="cancel" name="cancel" href="{{ link('forum-stats-stick') }}">{{ phrase('cancel') }}</xf:button>
+			</xf:html>
+		</xf:submitrow>
+		</div>
+	</div>
+</xf:form>

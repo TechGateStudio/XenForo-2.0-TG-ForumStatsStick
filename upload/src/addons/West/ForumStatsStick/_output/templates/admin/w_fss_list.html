@@ -1,0 +1,21 @@
+<xf:title>{{ phrase('w_fss_sticked_items') }}</xf:title>
+<xf:pageaction>
+	<xf:button href="{{ link('forum-stats-stick/add') }}" icon="add">{{ phrase('w_fss_add_sticked_item') }}</xf:button>
+</xf:pageaction>
+<div class="block-container">
+	<div class="block-body">
+		<xf:datalist>
+			<xf:foreach loop="$stickedItems" value="$stickedItem">
+				<xf:datarow>
+					<xf:main hash="{$stickedItem.sticked_item_id}"
+							 href="{{ link('forum-stats-stick/edit', $stickedItem) }}" label="{$stickedItem.name}"
+							 hint="{$stickedItem.link}" />
+					<xf:delete href="{{ link('forum-stats-stick/delete', $stickedItem) }}" />
+				</xf:datarow>
+			</xf:foreach>
+		</xf:datalist>
+	</div>
+	<div class="block-footer">
+		<span class="block-footer-counter">{{ display_totals(count($stickedItems)) }}</span>
+	</div>
+</div>
