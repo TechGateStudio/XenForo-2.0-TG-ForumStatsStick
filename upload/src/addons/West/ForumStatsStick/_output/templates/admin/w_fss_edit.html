@@ -16,12 +16,25 @@
 			<xf:numberboxrow name="display_order" value="{$stickedItem.display_order}"
 				label="{{ phrase('display_order') }}"
 			/>
+			<xf:radiorow name="stick_length" value="{{ !$stickedItem.end_date ? 'permanent' : 'temporary' }}"
+				label="{{ phrase('w_fss_stick_length') }}">
+
+				<xf:option label="{{ phrase('permanent') }}" value="permanent" />
+				<xf:option label="{{ phrase('until:') }}" value="temporary">
+					<xf:dateinput name="end_date" value="{{ $stickedItem.end_date ? date($stickedItem.end_date, 'Y-m-d') : '' }}" />
+				</xf:option>
+			</xf:radiorow>
+			
+			<xf:checkboxrow>
+				<xf:option name="active" checked="{$stickedItem.active}">{{ phrase('w_fss_sticked_item_active') }}</xf:option> 
+			</xf:checkboxrow>
+			
 			<xf:submitrow sticky="true" icon="save">
-			<xf:html>
-				<xf:button type="submit" icon="save" name="exit">{{ phrase('save_and_exit') }}</xf:button>
-				<xf:button icon="cancel" name="cancel" href="{{ link('forum-stats-stick') }}">{{ phrase('cancel') }}</xf:button>
-			</xf:html>
-		</xf:submitrow>
+				<xf:html>
+					<xf:button type="submit" icon="save" name="exit">{{ phrase('save_and_exit') }}</xf:button>
+					<xf:button icon="cancel" name="cancel" href="{{ link('forum-stats-stick') }}">{{ phrase('cancel') }}</xf:button>
+				</xf:html>
+			</xf:submitrow>
 		</div>
 	</div>
 </xf:form>

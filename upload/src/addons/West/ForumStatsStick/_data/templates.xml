@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
-  <template type="admin" title="w_fss_edit" version_id="2000010" version_string="2.0.0 Alpha"><![CDATA[<xf:if is="$stickedItem.isInsert()">
+  <template type="admin" title="w_fss_edit" version_id="2010070" version_string="2.1.0"><![CDATA[<xf:if is="$stickedItem.isInsert()">
 	<xf:title>{{ phrase('w_fss_add_sticked_item') }}</xf:title>
 <xf:else />
 	<xf:title>{{ phrase('w_fss_edit_sticked_item:') }} {$stickedItem.name}</xf:title>
@@ -18,36 +18,54 @@
 			<xf:numberboxrow name="display_order" value="{$stickedItem.display_order}"
 				label="{{ phrase('display_order') }}"
 			/>
+			<xf:radiorow name="stick_length" value="{{ !$stickedItem.end_date ? 'permanent' : 'temporary' }}"
+				label="{{ phrase('w_fss_stick_length') }}">
+
+				<xf:option label="{{ phrase('permanent') }}" value="permanent" />
+				<xf:option label="{{ phrase('until:') }}" value="temporary">
+					<xf:dateinput name="end_date" value="{{ $stickedItem.end_date ? date($stickedItem.end_date, 'Y-m-d') : '' }}" />
+				</xf:option>
+			</xf:radiorow>
+			
+			<xf:checkboxrow>
+				<xf:option name="active" checked="{$stickedItem.active}">{{ phrase('w_fss_sticked_item_active') }}</xf:option> 
+			</xf:checkboxrow>
+			
 			<xf:submitrow sticky="true" icon="save">
-			<xf:html>
-				<xf:button type="submit" icon="save" name="exit">{{ phrase('save_and_exit') }}</xf:button>
-				<xf:button icon="cancel" name="cancel" href="{{ link('forum-stats-stick') }}">{{ phrase('cancel') }}</xf:button>
-			</xf:html>
-		</xf:submitrow>
+				<xf:html>
+					<xf:button type="submit" icon="save" name="exit">{{ phrase('save_and_exit') }}</xf:button>
+					<xf:button icon="cancel" name="cancel" href="{{ link('forum-stats-stick') }}">{{ phrase('cancel') }}</xf:button>
+				</xf:html>
+			</xf:submitrow>
 		</div>
 	</div>
 </xf:form>]]></template>
-  <template type="admin" title="w_fss_list" version_id="2000010" version_string="2.0.0 Alpha"><![CDATA[<xf:title>{{ phrase('w_fss_sticked_items') }}</xf:title>
+  <template type="admin" title="w_fss_list" version_id="2000170" version_string="2.0.1"><![CDATA[<xf:title>{{ phrase('w_fss_sticked_items') }}</xf:title>
 <xf:pageaction>
 	<xf:button href="{{ link('forum-stats-stick/add') }}" icon="add">{{ phrase('w_fss_add_sticked_item') }}</xf:button>
 </xf:pageaction>
-<div class="block-container">
-	<div class="block-body">
-		<xf:datalist>
-			<xf:foreach loop="$stickedItems" value="$stickedItem">
-				<xf:datarow>
-					<xf:main hash="{$stickedItem.sticked_item_id}"
-							 href="{{ link('forum-stats-stick/edit', $stickedItem) }}" label="{$stickedItem.name}"
-							 hint="{$stickedItem.link}" />
-					<xf:delete href="{{ link('forum-stats-stick/delete', $stickedItem) }}" />
-				</xf:datarow>
-			</xf:foreach>
-		</xf:datalist>
+<xf:form action="{{ link('forum-stats-stick/toggle') }}" class="block" ajax="true">
+	<div class="block-container">
+		<div class="block-body">
+			<xf:datalist>
+				<xf:foreach loop="$stickedItems" value="$stickedItem">
+					<xf:datarow>
+						<xf:main hash="{$stickedItem.sticked_item_id}"
+								 href="{{ link('forum-stats-stick/edit', $stickedItem) }}" label="{$stickedItem.name}"
+								 hint="{$stickedItem.link}" />
+						<xf:toggle name="active[{$stickedItem.sticked_item_id}]" selected="$stickedItem.active" 
+								   class="dataList-cell--separated" submit="true" 
+								   tooltip="{{ phrase('enable_disable_x', {'title': $stickedItem.name}) }}" />
+						<xf:delete href="{{ link('forum-stats-stick/delete', $stickedItem) }}" />
+					</xf:datarow>
+				</xf:foreach>
+			</xf:datalist>
+		</div>
+		<div class="block-footer">
+			<span class="block-footer-counter">{{ display_totals(count($stickedItems)) }}</span>
+		</div>
 	</div>
-	<div class="block-footer">
-		<span class="block-footer-counter">{{ display_totals(count($stickedItems)) }}</span>
-	</div>
-</div>]]></template>
+</xf:form>]]></template>
   <template type="admin" title="w_fss_sticked_item_delete" version_id="2000010" version_string="2.0.0 Alpha"><![CDATA[<xf:title>{{ phrase('confirm_action') }}</xf:title>
 
 <xf:form action="{{ link('forum-stats-stick/delete', $stickedItem) }}" ajax="true" class="block">

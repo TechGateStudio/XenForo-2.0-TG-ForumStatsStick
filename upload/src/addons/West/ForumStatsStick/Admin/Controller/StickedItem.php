@@ -13,7 +13,7 @@ class StickedItem extends \XF\Admin\Controller\AbstractController {
 		$this->assertValidPage($page, $perPage, $total, 'forum-stats-stick');
 		$stickedItemFinder->limitByPage($page, $perPage);
 		$viewParams = [
-			'stickedItems' => $stickedItemFinder->order('display_order')->fetch(),
+			'stickedItems' => $stickedItemFinder->fetch(),
 			'page' => $page,
 			'perPage' => $perPage,
 			'total' => $total
@@ -29,6 +29,13 @@ class StickedItem extends \XF\Admin\Controller\AbstractController {
 	public function actionEdit(ParameterBag $params) {
 		$stickedItem = $this->assertStickedItemExists($params->sticked_item_id);
 		return $this->stickedItemAddEdit($stickedItem);
+	}
+
+	public function actionToggle() 
+	{ 
+		/** @var \XF\ControllerPlugin\Toggle $plugin */ 
+		$plugin = $this->plugin('XF:Toggle'); 
+		return $plugin->actionToggle('West\ForumStatsStick:StickedItem'); 
 	}
 
 	public function actionDelete(ParameterBag $params) {
@@ -65,11 +72,12 @@ class StickedItem extends \XF\Admin\Controller\AbstractController {
 
 	protected function stickedItemSaveProcess(\West\ForumStatsStick\Entity\StickedItem $stickedItem) {
 		$form = $this->formAction();
-
 		$input = $this->filter([
 			'name' => 'str',
 			'link' => 'str',
-			'display_order' => 'uint'
+			'display_order' => 'uint',
+			'end_date' => 'datetime',
+			'active' => 'bool'
 		]);
 		$form->basicEntitySave($stickedItem, $input);
 
@@ -100,7 +108,6 @@ class StickedItem extends \XF\Admin\Controller\AbstractController {
 		{
 			$redirect = $this->buildLink('forum-stats-stick/edit', $stickedItem);
 		}
-
-		return $this->redirect($redirect);
+		return $this->redirect($redirect, 'This is a redirect message.', 'temporary');
 	}
 }

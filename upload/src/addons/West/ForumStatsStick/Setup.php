@@ -21,6 +21,16 @@ class Setup extends AbstractSetup
             $table->addColumn('display_order', 'int');
         });
 	}
+	public function installStep2() {
+		$this->schemaManager()->alterTable('xf_fss_sticked_items', function(\XF\Db\Schema\Alter $table)
+        {
+            $table->addColumn('end_date', 'int')->setDefault(0);
+            $table->addColumn('active', 'bool')->setDefault(1);
+        });
+	}
+	public function upgrade2010070Step1() {
+		$this->installStep2();
+	}
 	public function uninstallStep1() {
 		$this->schemaManager()->dropTable('xf_fss_sticked_items');
 	}

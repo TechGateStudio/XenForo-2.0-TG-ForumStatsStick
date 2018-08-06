@@ -14,7 +14,7 @@ class Listener
 			case 'af_forumstats_latest_forum_news':
 			case 'af_forumstats_most_viewed_threads':
                 $stickedItemFinder = \XF::finder('West\ForumStatsStick:StickedItem');
-                $stickedItems = $stickedItemFinder->order('display_order')->fetch();
+                $stickedItems = $stickedItemFinder->where('active', 1)->order('display_order')->fetch();
             
 				$params = array_merge($params, 
                 [
